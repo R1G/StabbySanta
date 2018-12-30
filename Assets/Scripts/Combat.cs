@@ -7,6 +7,7 @@ public class Combat : MonoBehaviour
     public float stabRange;
     public Animator armAnim;
     LayerMask playerMask;
+    public AudioSource stabSource;
 
     private void Start() {
         playerMask = ~LayerMask.GetMask("Player");
@@ -24,7 +25,8 @@ public class Combat : MonoBehaviour
 
         if(Physics.Raycast(stabRay, out hit, stabRange, playerMask)) {
             if(hit.transform.gameObject.tag=="BACK") {
-                Destroy(hit.transform.parent.gameObject);
+                stabSource.Play();
+                hit.transform.parent.gameObject.GetComponent<SearchForPlayer>().Die();
             }
         }
 

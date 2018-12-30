@@ -1,10 +1,13 @@
 ﻿<Properties StartupConfiguration="{B90A7F73-2F4F-98D7-2D23-42F0B17576CF}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Combat.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/SearchForPlayer.cs">
     <Files>
-      <File FileName="Assets/Scripts/Combat.cs" Line="36" Column="1" />
-      <File FileName="Assets/Standard Assets/Characters/ThirdPersonCharacter/Scripts/ThirdPersonCharacter.cs" Line="72" Column="35" />
-      <File FileName="Assets/Scripts/SearchForPlayer.cs" Line="35" Column="92" />
-      <File FileName="Assets/Scripts/AiMovement.cs" Line="13" Column="67" />
+      <File FileName="Assets/Scripts/Combat.cs" Line="28" Column="35" />
+      <File FileName="Assets/Scripts/SearchForPlayer.cs" Line="82" Column="27" />
+      <File FileName="Assets/Scripts/StartMenu.cs" Line="10" Column="39" />
+      <File FileName="Assets/Scripts/Stealth.cs" Line="50" Column="9" />
+      <File FileName="Assets/Standard Assets/Characters/FirstPersonCharacter/Scripts/FirstPersonController.cs" Line="198" Column="47" />
+      <File FileName="Assets/Standard Assets/Characters/FirstPersonCharacter/Scripts/MouseLook.cs" Line="28" Column="1" />
+      <File FileName="Assets/Standard Assets/Characters/FirstPersonCharacter/Scripts/RigidbodyFirstPersonController.cs" Line="219" Column="34" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
