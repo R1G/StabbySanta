@@ -11,7 +11,7 @@ public class NPC_Behavior : MonoBehaviour
 
     //CONSTANTS
     const float interactionDistance = 2f; 
-    const float focusTime = 10f; //How long npc will do something until they switch states
+    const float focusTime = 20f; //How long npc will do something until they switch states
 
     //FINITE STATE MANAGEMENT
     enum npcStates {Idle, Talkative, Bored, Provocative, Panic, Search, Violent};
@@ -68,8 +68,8 @@ public class NPC_Behavior : MonoBehaviour
                 }
 
             case ((int)npcStates.Bored):
-                statusDebug.text = "Bored";
                 {
+                    statusDebug.text = "Bored";
                     if(targetProp==null)
                     {
                         targetProp = GetRandomFromArray((int)arrTypes.Prop);
@@ -86,8 +86,8 @@ public class NPC_Behavior : MonoBehaviour
                 }
 
             case ((int)npcStates.Provocative):
-                statusDebug.text = "Provocative";
                 {
+                    statusDebug.text = "Provocative";
                     if(targetGuest==null)
                     {
                         targetGuest = GetRandomFromArray((int)arrTypes.Guest);
@@ -107,15 +107,16 @@ public class NPC_Behavior : MonoBehaviour
                 }
 
             case ((int)npcStates.Panic):
-                statusDebug.text = "Panicking";
                 {
+                    statusDebug.text = "Panicking";
+                    ResetAITargets();
                     movement.Roam();
                     break;
                 }
 
             case ((int)npcStates.Search):
-                statusDebug.text = "Searching";
                 {
+                    statusDebug.text = "Searching";
                     if(targetGuest==null)
                     {
                         currentState = (int)npcStates.Idle;
@@ -132,8 +133,9 @@ public class NPC_Behavior : MonoBehaviour
                 }
 
             case ((int)npcStates.Violent):
-                statusDebug.text = "Violent";
+                
                 {
+                    statusDebug.text = "Violent";
                     if(targetGuest==null)
                     {
                         currentState = (int)npcStates.Idle;
@@ -147,6 +149,7 @@ public class NPC_Behavior : MonoBehaviour
                         Debug.Log(gameObject.name + " has killed " + targetGuest.name);
                         Instantiate(deadBody, targetGuest.transform.position, Quaternion.identity);
                         Destroy(targetGuest);
+                        gm.CheckForWitnesses(transform.position);
                         Invoke("GoIdle", 0.1f);
                     }
                     break;
@@ -161,9 +164,15 @@ public class NPC_Behavior : MonoBehaviour
         }
     }
 
-    public void WitnessCrime()
+    void SetWitness(Vector3 crimeLocation)
     {
-        currentState = (int)npcStates.Panic;
+        //cast a ray from crime location to this gameobject, if in range and LoS, is witness
+        if(Vector3.Distance(crimeLocation, transform.position)>8f) {
+            CancelInvoke();
+            currentState = (int)npcStates.Panic;
+            Invoke("GoIdle", 10f);
+        }
+
     }
 
     public void Offend(GameObject offender)
@@ -174,7 +183,12 @@ public class NPC_Behavior : MonoBehaviour
 
     int PickState()
     {
-        return Random.Range(1, 4); //states 1-3 are accessible independently
+        int i = Random.Range(1, 7);
+        if(i==7) {
+            return 4;
+        }
+        return i%3+1;
+        
     }
 
     GameObject GetRandomFromArray(int arrType)

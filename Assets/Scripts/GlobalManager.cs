@@ -14,4 +14,15 @@ public class GlobalManager : MonoBehaviour
         props = GameObject.FindGameObjectsWithTag("PROP");
         convos = GameObject.FindGameObjectsWithTag("CONVERSATION");
     }
+
+    public void CheckForWitnesses(Vector3 crimeLocation)
+    {
+        foreach(GameObject guest in guests)
+        {
+            if(guest==null) {
+                continue;
+            }
+            guest.SendMessage("SetWitness", crimeLocation);
+        }
+    }
 }
