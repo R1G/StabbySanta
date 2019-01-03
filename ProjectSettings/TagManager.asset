@@ -5,9 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Fire
-  - VICTIM
   - BACK
   - WAYPOINT
+  - GUEST
+  - CONVERSATION
+  - PROP
   layers:
   - Default
   - TransparentFX

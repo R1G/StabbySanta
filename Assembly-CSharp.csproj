@@ -60,10 +60,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Combat.cs" />
-    <Compile Include="Assets\Scripts\SearchForPlayer.cs" />
-    <Compile Include="Assets\Scripts\StartMenu.cs" />
-    <Compile Include="Assets\Scripts\Stealth.cs" />
+    <Compile Include="Assets\Scripts\FindTarget.cs" />
+    <Compile Include="Assets\Scripts\GlobalManager.cs" />
+    <Compile Include="Assets\Scripts\Health.cs" />
+    <Compile Include="Assets\Scripts\LoS.cs" />
+    <Compile Include="Assets\Scripts\Movement.cs" />
+    <Compile Include="Assets\Scripts\NPC_Behavior.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>/Users/rigved/Projects/UnityProjects/Slender Santa/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

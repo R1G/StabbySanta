@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
@@ -219,7 +219,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
             // handle speed change to give an fov kick
-            // only if the player is going to a run, is running and the fovkick is to be used
+            // only if the obj1 is going to a run, is running and the fovkick is to be used
             if (m_IsWalking != waswalking && m_UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0)
             {
                 StopAllCoroutines();
