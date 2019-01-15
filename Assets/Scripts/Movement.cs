@@ -41,9 +41,6 @@ public class Movement : MonoBehaviour
     {
         CancelMovement();
         transform.LookAt(target.transform.position);
-        Vector3 difference = target.transform.position - transform.position;
-        float rotationY = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0.0f, rotationY, 0.0f);
     }
 
     Vector3 GetRandomWayPointLocation()
@@ -62,7 +59,7 @@ public class Movement : MonoBehaviour
                      (!agent.hasPath || !(agent.velocity.sqrMagnitude > 0f));
     }
 
-    void CancelMovement()
+    public void CancelMovement()
     {
         agent.isStopped = true;
         agent.ResetPath();

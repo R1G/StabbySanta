@@ -15,7 +15,7 @@ public class NPC_Behavior : MonoBehaviour
     const float focusTime = 20f; //How long npc will do something until they switch states
 
     //FINITE STATE MANAGEMENT
-    enum npcState {Idle, Talkative, Bored, Provocative, Panic, Search, Violent};
+    enum npcState {Idle, Talkative, Bored, Provocative, Panic, Search, Violent, Interrogated};
     enum arrTypes {Prop, Guest, Convo}
     npcState currentState = npcState.Idle;
     bool isBusy;
@@ -105,6 +105,17 @@ public class NPC_Behavior : MonoBehaviour
                 }
                 break;
             }
+
+            case(npcState.Interrogated): {
+                if(GetDistanceFrom(player)>interactionDistance*3f) {
+                    currentState = npcState.Idle;
+                } else {
+                    movement.CancelMovement();
+                    movement.FaceToward(player);
+                }
+                break;
+            }
+
             default:{
                     movement.Roam();
                     break;
@@ -128,6 +139,15 @@ public class NPC_Behavior : MonoBehaviour
         currentState = npcState.Violent;
         targetGuest = _guest;
     }
+
+    void ToggleInterrogate() {
+        if(currentState==npcState.Interrogated) {
+            currentState = npcState.Idle;
+        } else {
+            currentState = npcState.Interrogated;
+        }
+    }
+
     npcState PickState()
     {
         return (npcState)Random.Range(0,3);

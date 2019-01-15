@@ -55,6 +55,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Crime.cs" />
      <Compile Include="Assets\Scripts\CrimeManager.cs" />
+     <Compile Include="Assets\Scripts\Detective.cs" />
      <Compile Include="Assets\Scripts\FindTarget.cs" />
      <Compile Include="Assets\Scripts\GlobalManager.cs" />
      <Compile Include="Assets\Scripts\Health.cs" />
