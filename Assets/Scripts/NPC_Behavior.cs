@@ -6,51 +6,52 @@ public class NPC_Behavior : MonoBehaviour
     Movement movement;
     FindTarget searchBehavior;
     GlobalManager gm;
-    public TextMesh statusDebug;
+    public GameObject nameTitle;
     public GameObject deadBody;
+    public Crime crime;
 
     //CONSTANTS
     const float interactionDistance = 2f; 
     const float focusTime = 20f; //How long npc will do something until they switch states
 
     //FINITE STATE MANAGEMENT
-    enum npcStates {Idle, Talkative, Bored, Provocative, Panic, Search, Violent};
+    enum npcState {Idle, Talkative, Bored, Provocative, Panic, Search, Violent};
     enum arrTypes {Prop, Guest, Convo}
-    int currentState = -1;
+    npcState currentState = npcState.Idle;
     bool isBusy;
 
     //INTERACTIBLES
     GameObject targetGuest;
     GameObject targetConvo;
     GameObject targetProp;
+    GameObject player; 
 
     void Start() {
         movement = GetComponent<Movement>();
         searchBehavior = GetComponent<FindTarget>();
         gm = GameObject.Find("GlobalManager").GetComponent<GlobalManager>();
-        currentState = (int)npcStates.Idle;
+        player = GameObject.FindGameObjectWithTag("Player");
+        currentState = npcState.Idle;
         isBusy = false;
+        nameTitle = Instantiate(nameTitle, transform.position+Vector3.up, Quaternion.identity) as GameObject;
+        nameTitle.GetComponent<TextMesh>().text=gameObject.name;
     }
 
     void Update()
     {
         switch(currentState)
         {
-            case ((int)npcStates.Idle):
-                {
-                    statusDebug.text = "Idle";
+            case (npcState.Idle): {
                     isBusy = false;
                     ResetAITargets();
                     currentState = PickState(); 
                     break;
                 }
 
-            case ((int)npcStates.Talkative):
-                {
-                    statusDebug.text = "Talkative";
+            case (npcState.Talkative): {
                     if (targetConvo==null)
                     {
-                        targetConvo = GetRandomFromArray((int)arrTypes.Convo);
+                        targetConvo = GetRandomFromArray(arrTypes.Convo);
                     }
                     else
                     {
@@ -67,12 +68,10 @@ public class NPC_Behavior : MonoBehaviour
                     break;
                 }
 
-            case ((int)npcStates.Bored):
-                {
-                    statusDebug.text = "Bored";
+            case (npcState.Bored): {
                     if(targetProp==null)
                     {
-                        targetProp = GetRandomFromArray((int)arrTypes.Prop);
+                        targetProp = GetRandomFromArray(arrTypes.Prop);
                     } else if(GetDistanceFrom(targetProp)>interactionDistance)
                     {
                         movement.Approach(targetProp);
@@ -85,130 +84,73 @@ public class NPC_Behavior : MonoBehaviour
                     break;
                 }
 
-            case ((int)npcStates.Provocative):
-                {
-                    statusDebug.text = "Provocative";
-                    if(targetGuest==null)
-                    {
-                        targetGuest = GetRandomFromArray((int)arrTypes.Guest);
-                    }
-                    else if(GetDistanceFrom(targetGuest)>interactionDistance)
-                    {
-                        movement.Approach(targetGuest);
-                    }
-                    else if(!isBusy)
-                    {
-                        targetGuest.GetComponent<NPC_Behavior>().Offend(gameObject);
-                        Debug.Log(gameObject.name + "has offended " + targetGuest.name);
-                        isBusy = true;
-                        Invoke("GoIdle", 0.1f);
-                    }
-                    break;
+            case (npcState.Violent): {
+                if(targetGuest==null) {
+                    currentState=npcState.Idle;
+                } else if(GetDistanceFrom(targetGuest)>interactionDistance) {
+                    movement.Approach(targetGuest);
+                } else {
+                    Kill();
                 }
+                break;
+            }
 
-            case ((int)npcStates.Panic):
-                {
-                    statusDebug.text = "Panicking";
-                    ResetAITargets();
-                    movement.Roam();
-                    break;
+            case (npcState.Panic): {
+                if(player==null) {
+                    currentState = npcState.Idle;
+                } else if(GetDistanceFrom(player)>interactionDistance) {
+                    movement.Approach(player);
+                } else {
+                    Invoke("GoIdle", 3f);
                 }
-
-            case ((int)npcStates.Search):
-                {
-                    statusDebug.text = "Searching";
-                    if(targetGuest==null)
-                    {
-                        currentState = (int)npcStates.Idle;
-                    }
-                    else if(searchBehavior.target==null)
-                    {
-                        searchBehavior.target = targetGuest;
-                    }
-                    else if(searchBehavior.isFound)
-                    {
-                        currentState = (int)npcStates.Violent;
-                    }
-                    break;
-                }
-
-            case ((int)npcStates.Violent):
-                
-                {
-                    statusDebug.text = "Violent";
-                    if(targetGuest==null)
-                    {
-                        currentState = (int)npcStates.Idle;
-                    }
-                    else if(GetDistanceFrom(targetGuest)>interactionDistance)
-                    {
-                        movement.Approach(targetGuest);
-                    }
-                    else
-                    {
-                        Debug.Log(gameObject.name + " has killed " + targetGuest.name);
-                        Instantiate(deadBody, targetGuest.transform.position, Quaternion.identity);
-                        Destroy(targetGuest);
-                        gm.CheckForWitnesses(transform.position);
-                        Invoke("GoIdle", 0.1f);
-                    }
-                    break;
-                }
-
-            default:
-                {
-                    statusDebug.text = "Error";
+                break;
+            }
+            default:{
                     movement.Roam();
                     break;
                 }
         }
+        nameTitle.transform.position=transform.position+Vector3.up;
     }
 
-    void SetWitness(Vector3 crimeLocation)
+    void SetWitness()
     {
-        //cast a ray from crime location to this gameobject, if in range and LoS, is witness
-        if(Vector3.Distance(crimeLocation, transform.position)>8f) {
-            CancelInvoke();
-            currentState = (int)npcStates.Panic;
-            Invoke("GoIdle", 10f);
-        }
-
+        currentState = npcState.Panic;
+        Invoke("GoIdle", 10f);
     }
 
-    public void Offend(GameObject offender)
+    public void SendToCrime(GameObject _prop) {
+        currentState = npcState.Bored;
+        targetProp = _prop;
+    }
+
+    public void SendToVictim(GameObject _guest) {
+        currentState = npcState.Violent;
+        targetGuest = _guest;
+    }
+    npcState PickState()
     {
-        targetGuest = offender;
-        currentState = (int)npcStates.Violent;
+        return (npcState)Random.Range(0,3);
     }
 
-    int PickState()
-    {
-        int i = Random.Range(1, 7);
-        if(i==7) {
-            return 4;
-        }
-        return i%3+1;
-        
-    }
-
-    GameObject GetRandomFromArray(int arrType)
+    GameObject GetRandomFromArray(arrTypes _type)
     {
         GameObject[] arr;
-        switch(arrType)
+        switch(_type)
         {
-            case ((int)arrTypes.Convo):
+            case (arrTypes.Convo):
                 {
                     arr = gm.convos;
                     break;
                 }
 
-            case ((int)arrTypes.Guest):
+            case (arrTypes.Guest):
                 {
                     arr = gm.guests;
                     break;
                 }
 
-            case ((int)arrTypes.Prop):
+            case (arrTypes.Prop):
                 {
                     arr = gm.props;
                     break;
@@ -247,7 +189,7 @@ public class NPC_Behavior : MonoBehaviour
 
     void GoIdle()
     {
-        currentState = (int)npcStates.Idle;
+        currentState = npcState.Idle;
     }
 
     void ResetAITargets()
@@ -256,7 +198,15 @@ public class NPC_Behavior : MonoBehaviour
         targetGuest = null;
         targetConvo = null;
     }
+
+    void Kill() {
+        targetGuest.GetComponent<Health>().TakeDamage(1000);
+        targetGuest = null;
+        crime.ExecuteCrime();
+    }
 }
+
+
 
 
 

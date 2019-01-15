@@ -62,16 +62,6 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: hair
-    second: {fileID: 2100000, guid: 9ecc40f89e0184e9ea492e8719753d81, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: pant
-    second: {fileID: 2100000, guid: 9ecc40f89e0184e9ea492e8719753d81, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: shirt
     second: {fileID: 2100000, guid: 9ecc40f89e0184e9ea492e8719753d81, type: 2}
   - first:
@@ -80,7 +70,7 @@ ModelImporter:
       name: skin
     second: {fileID: 2100000, guid: 9ecc40f89e0184e9ea492e8719753d81, type: 2}
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1

@@ -1,6 +1,6 @@
 {
-  "ProjectFilePath": "/Users/rigved/Projects/UnityProjects/Slender Santa/Assembly-CSharp-Editor-firstpass.csproj",
-  "TargetFramework": "v4.7.1",
+  "ProjectFilePath": "/Users/rigved/Projects/UnityProjects/Slender Santa/Assembly-CSharp.csproj",
+  "TargetFramework": "v4.5",
   "TagHelpers": [],
   "Configuration": {
     "ConfigurationName": "UnsupportedRazor",

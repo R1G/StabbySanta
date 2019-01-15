@@ -47,6 +47,4 @@ public class LoS : MonoBehaviour
         }
         return false;
     }
-
-
 }
