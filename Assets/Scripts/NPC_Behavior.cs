@@ -6,6 +6,7 @@ public class NPC_Behavior : MonoBehaviour
     Movement movement;
     FindTarget searchBehavior;
     GlobalManager gm;
+    DialogueSystem ds;
     public GameObject nameTitle;
     public GameObject deadBody;
     public Crime crime;
@@ -30,6 +31,7 @@ public class NPC_Behavior : MonoBehaviour
         movement = GetComponent<Movement>();
         searchBehavior = GetComponent<FindTarget>();
         gm = GameObject.Find("GlobalManager").GetComponent<GlobalManager>();
+        ds = GameObject.Find("PlayerCanvas").GetComponent<DialogueSystem>();
         player = GameObject.FindGameObjectWithTag("Player");
         currentState = npcState.Idle;
         isBusy = false;
@@ -109,9 +111,12 @@ public class NPC_Behavior : MonoBehaviour
             case(npcState.Interrogated): {
                 if(GetDistanceFrom(player)>interactionDistance*3f) {
                     currentState = npcState.Idle;
+                    ds.SetDialogue(gameObject.name+": Goodbye");
+                    ds.DelayClearLog();
                 } else {
                     movement.CancelMovement();
                     movement.FaceToward(player);
+                    ds.SetDialogue(gameObject.name+": I haven't seen anything");
                 }
                 break;
             }
@@ -143,6 +148,8 @@ public class NPC_Behavior : MonoBehaviour
     void ToggleInterrogate() {
         if(currentState==npcState.Interrogated) {
             currentState = npcState.Idle;
+            ds.SetDialogue(gameObject.name+": Goodbye");
+            ds.DelayClearLog();
         } else {
             currentState = npcState.Interrogated;
         }

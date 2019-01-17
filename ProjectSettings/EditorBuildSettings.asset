@@ -8,16 +8,19 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/StartMenu.unity
     guid: 8362df3e7ab2f478b9d9e58ac93eb511
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2462eea009b154112b3403c4c2be59db
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/EndScene.unity
     guid: d2a60b1f2f48149d5b555a94b0f86a39
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/WinScene.unity
     guid: 18229942de8da484ab39ae6ebaa2071d
+  - enabled: 1
+    path: Assets/Scenes/Frasiers.unity
+    guid: 61b8107d218374429bcc0e78eb1a09d3
   m_configObjects: {}
